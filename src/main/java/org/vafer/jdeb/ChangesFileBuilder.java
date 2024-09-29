@@ -34,13 +34,14 @@ import org.vafer.jdeb.utils.InformationOutputStream;
  */
 class ChangesFileBuilder {
 
-    public ChangesFile createChanges(BinaryPackageControlFile packageControlFile, File binaryPackage, ChangesProvider changesProvider) throws IOException, PackagingException {
+    public ChangesFile createChanges(BinaryPackageControlFile packageControlFile, File binaryPackage, ChangesProvider changesProvider, Date outputTimestamp) throws IOException, PackagingException {
 
         ChangesFile changesFile = new ChangesFile();
         changesFile.setChanges(changesProvider.getChangesSets());
         changesFile.initialize(packageControlFile);
 
-        changesFile.set("Date", ChangesFile.formatDate(new Date()));
+        // Set the Date field using the provided timestamp, or the current date and time if not provided
+        changesFile.set("Date", ChangesFile.formatDate(outputTimestamp != null ? outputTimestamp : new Date()));
 
         try {
             // compute the checksums of the binary package
